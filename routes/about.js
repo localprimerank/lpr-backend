@@ -9,6 +9,8 @@ const {
 
 const router = express.Router();
 
+
+
 router.get("/", getAbout);
 router.post("/", protect, admin, createAbout);
 router.put("/", protect, admin, updateAbout);
