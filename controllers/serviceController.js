@@ -1,5 +1,15 @@
 const Service = require('../models/Service');
 
+// Matches the same slug logic your frontend uses to build service URLs
+const slugify = (text) =>
+  text
+    .toString()
+    .trim()
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
 // 1. Get all services (Sorted by the 'order' field)
 const getServices = async (req, res) => {
   try {
@@ -14,6 +24,22 @@ const getServices = async (req, res) => {
 const getService = async (req, res) => {
   try {
     const service = await Service.findById(req.params.id);
+    if (!service) {
+      return res.status(404).json({ success: false, error: 'Service not found' });
+    }
+    res.json({ success: true, data: service });
+  } catch (error) {
+    res.status(400).json({ success: false, error: error.message });
+  }
+};
+
+// 2b. NEW: Get a single service by its title-based slug (used by the service detail page)
+const getServiceBySlug = async (req, res) => {
+  try {
+    const { slug } = req.params;
+    const services = await Service.find();
+    const service = services.find((s) => slugify(s.title) === slug);
+
     if (!service) {
       return res.status(404).json({ success: false, error: 'Service not found' });
     }
@@ -62,6 +88,7 @@ const deleteService = async (req, res) => {
 module.exports = {
   getServices,
   getService,
+  getServiceBySlug,
   createService,
   updateService,
   deleteService
