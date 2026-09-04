@@ -1,5 +1,15 @@
 const mongoose = require("mongoose");
 
+const caseStudySchema = new mongoose.Schema(
+  {
+    title: { type: String, trim: true, default: "" },
+    description: { type: String, trim: true, default: "" },
+    image: { type: String, trim: true, default: "" },
+    video: { type: String, trim: true, default: "" },
+  },
+  { _id: false }
+);
+
 const serviceSchema = new mongoose.Schema(
   {
     // ── EXISTING FIELDS (unchanged) ──
@@ -11,20 +21,19 @@ const serviceSchema = new mongoose.Schema(
     buttonText: { type: String, default: "Get in touch" },
     order: { type: Number, default: 0 },
 
-    // ── NEW: main video (your frontend already expects this field) ──
+    // main video
     video: { type: String, default: "" },
 
-    // ── NEW: short description shown under the service title ──
+    // short description shown under the service title
     description: { type: String, trim: true, default: "" },
 
-    // ── NEW: plain info block (no heading), shown right after the image/video ──
+    // plain info block (no heading), shown right after the image/video
     aboutText: { type: String, trim: true, default: "" },
 
-    // ── NEW: Case Studies section ──
+    // Case Studies section — one heading for the whole section,
+    // and now a LIST of case studies instead of a single one
     caseStudyHeading: { type: String, trim: true, default: "CASE STUDIES" },
-    caseStudyDescription: { type: String, trim: true, default: "" },
-    caseStudyImage: { type: String, trim: true, default: "" },
-    caseStudyVideo: { type: String, trim: true, default: "" },
+    caseStudies: [caseStudySchema],
   },
   { timestamps: true },
 );
