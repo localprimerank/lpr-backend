@@ -1,10 +1,12 @@
 const multer = require("multer");
 
 const storage = multer.memoryStorage();
+
 const upload = multer({
   storage,
   limits: {
-    fileSize: 10 * 1024 * 1024,
+    // Raised from 10MB to 200MB — images are small, but video files need much more room
+    fileSize: 200 * 1024 * 1024,
   },
   fileFilter: (req, file, callback) => {
     const allowedMimes = [
